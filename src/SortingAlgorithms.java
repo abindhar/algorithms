@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class SortingAlgorithms {
     public static int[] bubbleSort(int[] nums){
@@ -31,8 +32,7 @@ public class SortingAlgorithms {
     }
     public static int[] mergeSort(int[] nums){
         int[] helper = new int[nums.length];
-        int lo = 0;
-        int hi = nums.length -1;
+        int lo = 0, hi = nums.length-1;
         mergeSortHelper(nums, helper, lo, hi);
         return nums;
     }
@@ -52,7 +52,7 @@ public class SortingAlgorithms {
             helper[i] = nums[i];
         int l = lo, r = mid+1, idx = lo;
         while (l<=mid && r<=hi){
-            if (helper[l]<helper[r]){
+            if (helper[l]<=helper[r]){
                 nums[idx] = helper[l];
                 l++;
             }else{
@@ -66,10 +66,18 @@ public class SortingAlgorithms {
             nums[idx+i] = nums[l+i];
         }
     }
-    public static void quickSort(int[] nums){
-        //
+    public static int[] quickSort(int[] nums){
+        quickSortHelper(nums, 0, nums.length-1);
+        return nums;
     }
+    public static void quickSortHelper(int[] nums, int lo, int hi){
+        Random rand = new Random();
+        int pivotIdx  = rand.nextInt(nums.length+1);
+        int pivot = partition(nums, pivotIdx);
+    }
+    public static int partition(int[] nums, int pivotIdx){
 
+    }
     public static void main(String[] args){
         int[] nums = {7,1,9,2,11,13,6,7,3,4,0,-1};
         System.out.println(Arrays.toString(bubbleSort(nums.clone())));
