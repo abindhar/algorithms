@@ -71,19 +71,49 @@ public class SortingAlgorithms {
         return nums;
     }
     public static void quickSortHelper(int[] nums, int lo, int hi){
+        if (lo>=hi){
+            return;
+        }
         Random rand = new Random();
-        int pivotIdx  = rand.nextInt(nums.length+1);
-        int pivot = partition(nums, pivotIdx);
+        //Choose a pivot element
+        int pivot  = nums[lo + rand.nextInt(hi+1-lo)];
+        int idx = partition(nums, pivot, lo, hi);
+        quickSortHelper(nums, lo, idx-1);
+        quickSortHelper(nums, idx+1, hi);
     }
-    public static int partition(int[] nums, int pivotIdx){
-
+    public static int partition(int[] nums, int pivot, int lo, int hi){
+        //Find first elem > pivot from left and first elem < pivot from right and swap
+        System.out.println(lo);
+        System.out.println(hi);
+        System.out.println(nums.length);
+        System.out.println(Arrays.toString(nums));
+        System.out.println(pivot);
+        while (lo<hi){
+            while (nums[lo]<pivot){
+                lo++;
+            }
+            System.out.println(lo);
+            while (nums[hi]>pivot){
+                hi++;
+            }
+            System.out.println(hi);
+            if (lo<=hi){
+                //Swap
+                int tmp = nums[lo];
+                nums[lo] = nums[hi];
+                nums[hi] = tmp;
+                lo++;
+                hi--;
+            }
+        }
+        return lo;
     }
     public static void main(String[] args){
         int[] nums = {7,1,9,2,11,13,6,7,3,4,0,-1};
         System.out.println(Arrays.toString(bubbleSort(nums.clone())));
         System.out.println(Arrays.toString(selectionSort(nums.clone())));
         System.out.println(Arrays.toString(mergeSort(nums.clone())));
-        //System.out.println(Arrays.toString(quickSort(nums.clone())));
+        System.out.println(Arrays.toString(quickSort(nums.clone())));
     }
 }
 
