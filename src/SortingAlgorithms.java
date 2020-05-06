@@ -129,7 +129,12 @@ public class SortingAlgorithms {
 
     public static int[] simpleCouting(int[] nums){
         /* This is a simple implementation of the basic idea of counting sort
+        *  This is not counting sort though
         *  Unlike counting sort this method isn't stable sorting
+        *  Time: O( n + (max-min)): Find min&max (n), Fill up freqCount arr (n), Check every index
+        *  in freqCount arr and print that num, freq times (max-min)
+        *  Space: O(max-min+1)
+        *  If array is small but range of nums is too broad [1,2,3,1000000], this algo is bad
         * */
         int max = nums[0], min = nums[0];
         for (int x : nums) {
@@ -154,6 +159,57 @@ public class SortingAlgorithms {
         }
         return nums;
     }
+    public static int[] countingSort(int[] nums){
+        /* Counting Sort Algorithm
+        *  Useful when nums contains integers
+        *  Let k be the range of the numbers in nums, k is number of unique values
+        *  to be counted
+        *  Time: O(n+k) Best, Worst, Average
+        *  Space: O(n)
+        *  Example:
+        *  nums = [3,2,6,5,3,2,6,6,1] min=1 max=6 k=6-1+1=6 freq of min is at freq[0]
+        *  freq = [1,2,2,0,1,3] cumFreq = [1,3,5,5,6,9]
+        *  Start with num[0] => 3, 3 is mapped to 3-min => idx=2 cumFreq = 5, place it at idx=5-1 in ans
+        *  ans = [0,0,0,0,3,0,0,0,0]
+        *  Dec freq and cumFreq and continue until freq=0 ...
+        *  ans = [0,2,2,3,3,0,0,0,0]
+        * */
+        int min, max, k, n = nums.length;
+        // Get the range
+        min = nums[0];
+        max = nums[0];
+        // Get min and max
+        for (int i=1; i<n; i++) {
+            if (nums[i]<min) min = nums[i];
+            else if (nums[i]>max) max = nums[i];
+        }
+        // Freq Array
+        k = max-min+1; // Range of the unique numbers
+        int[] count = new int[k]; // If the range is too large this blows up
+        // Fill count array
+        // Freq of min elem is mapped to count[0]
+        // Freq of max elem is mapped to count[k-1]
+        for (int i=0; i<n; i++){
+            count[nums[i]-min]++;
+        }
+        // Take a running sum
+        for (int i=1; i<k; i++){
+            count[i] += count[i-1];
+        }
+        // count array is now special
+        // Suppose count[2]=3 it means count of numbers <= 2 present in nums is 3
+        // Which means 2's last position is supposed to be at index 3-1 in final ans
+        int[] ans = new int[n];
+        for (int x : nums){
+            // x is the element to be placed
+            // x's freq is freq[x-min] and last index cumFreq[x-min]-1
+            // Place current element at the last index it can be in
+            ans[count[x-min]-1] = x;
+            count[x-min]--;
+        }
+        return ans;
+    }
+
     public static void main(String[] args){
         // Driver code
         int[] nums = {7,1,9,2,11,13,6,7,3,4,0,-1};
@@ -164,7 +220,10 @@ public class SortingAlgorithms {
 //        System.out.println(Arrays.toString(insertionSort(nums.clone())));
 //        System.out.println(Arrays.toString(mergeSort(nums.clone())));
 //        System.out.println(Arrays.toString(quickSort(nums.clone())));
-        System.out.println(Arrays.toString(simpleCouting(nums.clone())));
+//        System.out.println("Simple Counting: \n" + Arrays.toString(simpleCouting(nums.clone())));
+//        nums = new int[]{-2,5,4,3,3,2,5,4,3,-2,-1,-1,-2,4,5,5,5,5,5,-2,-1};
+//        nums = new int[]{-214748499, 214748389}; // Bad case for counting sort
+        System.out.println("Counting Sort: \n" + Arrays.toString(countingSort(nums.clone())));
     }
 }
 
