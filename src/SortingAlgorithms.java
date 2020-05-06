@@ -30,6 +30,29 @@ public class SortingAlgorithms {
         }
         return nums;
     }
+    public static int[] insertionSort(int[] nums){
+        /* Alog: nums[i-1] is already sorted, now insert nums[i] into correct place
+        Store current elem at i in variable key. Now initialize j=i-1
+        Move all elements > target one place to right. Then place key at j+1
+        * */
+        int key, n = nums.length;
+        // Insertion sort loop runs from second element
+        for (int i=1; i<n; i++){
+            // Store current elem at correct pos in sorted nums[:i]
+            key = nums[i];
+            // Move elements of arr[0..i-1], that are greater than key
+            // to one position ahead of their current position
+            int j = i-1;
+            while (j>=0 && nums[j]>key) {
+                nums[j+1] = nums[j];
+                j--;
+            }
+            // Now j+1 is the index where key should be inserted
+            nums[j+1] = key;
+            // System.out.println(Arrays.toString(nums));
+        }
+        return nums;
+    }
     public static int[] mergeSort(int[] nums){
         int[] helper = new int[nums.length];
         int lo = 0, hi = nums.length-1;
@@ -98,17 +121,50 @@ public class SortingAlgorithms {
                 lo++;
                 hi--;
             }
-
         }
         return lo;
+    }
+
+    // Non comparison based sorting algorithms
+
+    public static int[] simpleCouting(int[] nums){
+        /* This is a simple implementation of the basic idea of counting sort
+        *  Unlike counting sort this method isn't stable sorting
+        * */
+        int max = nums[0], min = nums[0];
+        for (int x : nums) {
+            if (x<min) min = x;
+            else if (x>max) max = x;
+        }
+        int range = max-min+1;
+        // Freq Counter of size to accomodate min to max range
+        int[] freqCounter = new int[range];
+        // Store count of x at x-min index
+        for (int x : nums) {
+            freqCounter[x-min]++;
+        }
+        int ptr = 0;
+        for (int i=0; i<range; i++){
+            if (!(freqCounter[i]==0)){
+                for (int j=0; j<freqCounter[i]; j++){
+                    nums[ptr] = min+i;
+                    ptr++;
+                }
+            }
+        }
+        return nums;
     }
     public static void main(String[] args){
         // Driver code
         int[] nums = {7,1,9,2,11,13,6,7,3,4,0,-1};
-        System.out.println(Arrays.toString(bubbleSort(nums.clone())));
-        System.out.println(Arrays.toString(selectionSort(nums.clone())));
-        System.out.println(Arrays.toString(mergeSort(nums.clone())));
-        System.out.println(Arrays.toString(quickSort(nums.clone())));
+        System.out.println("Original Array:\n" + Arrays.toString(nums));
+        // Sorting algorithms
+//        System.out.println(Arrays.toString(bubbleSort(nums.clone())));
+//        System.out.println(Arrays.toString(selectionSort(nums.clone())));
+//        System.out.println(Arrays.toString(insertionSort(nums.clone())));
+//        System.out.println(Arrays.toString(mergeSort(nums.clone())));
+//        System.out.println(Arrays.toString(quickSort(nums.clone())));
+        System.out.println(Arrays.toString(simpleCouting(nums.clone())));
     }
 }
 
