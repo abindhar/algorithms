@@ -3,7 +3,9 @@ import java.util.Arrays;
 import java.util.*;
 
 public class Chapter1 {
-    // Q1
+    /* Chapter 1 :  Arrays and Strings
+     */
+
     public static boolean isUnique(String str){
         // O(n) Time O(n) Space
         boolean[] char_map = new boolean[26];
