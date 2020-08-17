@@ -16,6 +16,7 @@ public class SortingAlgorithms {
         }
         return nums;
     }
+
     public static int[] selectionSort(int[] nums){
         for (int i=0; i<nums.length; i++){
             int minIdx = i;
@@ -32,6 +33,7 @@ public class SortingAlgorithms {
         }
         return nums;
     }
+
     public static int[] insertionSort(int[] nums){
         /* Alog: nums[i-1] is already sorted, now insert nums[i] into correct place
         Store current elem at i in variable key. Now initialize j=i-1
@@ -55,12 +57,18 @@ public class SortingAlgorithms {
         }
         return nums;
     }
+
     public static int[] mergeSort(int[] nums){
-        int[] helper = new int[nums.length]; //Extra space
+        /*
+        Time: O(nlogn)
+        Space: O(n) for auxiliary array (helper) used in mergeSorted() subroutine
+         */
+        int[] helper = new int[nums.length]; //Auxiliary Array
         int lo = 0, hi = nums.length-1;
         mergeSortHelper(nums, helper, lo, hi);
         return nums;
     }
+
     public static void mergeSortHelper(int[] nums, int[] helper, int lo, int hi) {
         if (lo<hi){
             int mid = lo + (hi-lo)/2;
@@ -71,6 +79,7 @@ public class SortingAlgorithms {
         }
     }
     public static void mergeSorted(int[] nums, int[] helper, int lo, int mid, int hi){
+        // Popular interview question
         // Merges sorted parts of nums array from lo to mid and mid+1 to hi
         //Copy elements of nums to helper array
         for (int i=lo; i<=hi; i++)
@@ -91,6 +100,50 @@ public class SortingAlgorithms {
             nums[idx+i] = helper[l+i];
         }
     }
+
+    public static int[] mergeSortPractice(int[] nums){
+        int n = nums.length;
+        int[] helper = new int[n];
+        mergeSortHelperPractice(nums, helper, 0, n-1);
+        return nums;
+    }
+
+    public static void mergeSortHelperPractice(int[] nums, int[] helper, int lo, int hi){
+        if (lo < hi){
+            int mid = lo + (hi - lo) /2;
+            mergeSortHelperPractice(nums, helper, lo, mid);
+            mergeSortHelperPractice(nums, helper, mid+1, hi);
+            // Now nums is sorted between lo..mid and mid+1..hi
+            mergeSortedPractice(nums, helper, lo, mid, hi);
+        }
+    }
+
+    public static void mergeSortedPractice(int[] nums, int[] helper, int lo, int mid, int hi){
+        int p1 = mid, p2 = hi, idx = hi;
+        // Copy elems from lo..hi into helper array, use helper as original reference, put correct order in nums
+        for (int j=lo; j<=hi; j++){
+            helper[j] = nums[j];
+        }
+        while (p1 >=0 && p2 >=mid+1){
+            if (helper[p1]>helper[p2]){
+                nums[idx] = helper[p1];
+                p1--;
+            } else {
+                nums[idx] = helper[p2];
+                p2--;
+            }
+            idx--;
+        }
+
+        // left side sorted array is exhausted, the smallest elems are on the right array
+        while (p2>=mid+1){
+            nums[idx] = helper[p2];
+            p2--;
+            idx--;
+        }
+    }
+
+
     public static int[] quickSort(int[] nums){
         quickSortHelper(nums, 0, nums.length-1);
         return nums;
@@ -381,12 +434,13 @@ public class SortingAlgorithms {
     public static void main(String[] args){
         int[] nums = {7,1,9,2,11,13,6,7,3,4,0,-1};
         System.out.println("Original Array:\n" + Arrays.toString(nums));
-//        System.out.println(Arrays.toString(bubbleSort(nums.clone())));
+
 //        System.out.println(Arrays.toString(selectionSort(nums.clone())));
 //        System.out.println(Arrays.toString(insertionSort(nums.clone())));
-        System.out.println(Arrays.toString(heapSort(nums.clone())));
-        System.out.println(Arrays.toString(heapSortEfficient(nums.clone())));
-//        System.out.println(Arrays.toString(mergeSort(nums.clone())));
+//        System.out.println(Arrays.toString(heapSort(nums.clone())));
+//        System.out.println(Arrays.toString(heapSortEfficient(nums.clone())));
+        System.out.println(Arrays.toString(mergeSort(nums.clone())));
+        System.out.println(Arrays.toString(mergeSortPractice(nums.clone())));
 //        System.out.println(Arrays.toString(quickSort(nums.clone())));
 //        System.out.println("Simple Counting: \n" + Arrays.toString(simpleCouting(nums.clone())));
 //        nums = new int[]{-2,5,4,3,3,2,5,4,3,-2,-1,-1,-2,4,5,5,5,5,5,-2,-1};
