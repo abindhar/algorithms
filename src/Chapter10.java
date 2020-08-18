@@ -94,16 +94,24 @@ public class Chapter10 {
         }
         return names;
     }
-    public String[] groupAnagrams4(String[] names){
-        /*
-        Avoid any sorting. Write out a freq representation of each string in terms of an int[26]
-        "aba" => [2, 1, 0 ......]
-        Anagrams would have same representation
+    public List<List<String>> groupAnagrams4(String[] names){
+        /* Avoid any sorting.
+        Write out a freq representation of each string in terms of an int[26]
+        "aba" => [2, 1, 0 ......] => O(k) time O(26) space (here k is the length of the longest string
+        Use String.valueOf() to convert char[] to String // Python=> ''.join()
          */
+        HashMap<String, List<String>> map = new HashMap<>();
         for (String name : names){
-            int[] map = new int[26];
+            char[] cArr = new char[26];
+            for (char c : name.toCharArray()) {
+                if (c==' ') continue;
+                cArr[c-'a']++;
+            }
+            String key = String.valueOf(cArr);
+            if (!map.containsKey(key)) map.put(key, new ArrayList<>()); // Python => defaultdict(list)
+            map.get(key).add(name);
         }
-        return names;
+        return new ArrayList<>(map.values());
     }
     public static void main(String[] args){
         /*
@@ -116,8 +124,11 @@ public class Chapter10 {
         //System.out.println("Result:\n" + Arrays.toString(A));
 
         String[] names = {"zscaler", "abba", "bbaa", "roland reagan", "a darn long era", "anagram", "nag a ram"};
-        //System.out.println("Result: \n" + Arrays.toString(obj.groupAnagrams(names))); //wrong, this is simple lexical sorting
-        System.out.println(Arrays.toString(obj.groupAnagrams2(names.clone())));
-        System.out.println(Arrays.toString(obj.groupAnagrams3(names.clone())));
+        System.out.println(Arrays.toString(names));
+        //wrong, this is simple lexical sorting
+        //System.out.println(Arrays.toString(obj.groupAnagrams(names.clone())));
+        //System.out.println(Arrays.toString(obj.groupAnagrams2(names.clone())));
+        //System.out.println(Arrays.toString(obj.groupAnagrams3(names.clone())));
+        System.out.println(obj.groupAnagrams4(names.clone()));
     }
 }
